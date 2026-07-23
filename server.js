@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
+process.env.NODE_ENV = process.env.NODE_ENV || 'production';
 const path = require('path');
 const fs = require('fs');
 
@@ -63,12 +64,25 @@ function sendMail(email, sujet, corps) {
 
 // ===== MIDDLEWARE =====
 app.use(express.json({ limit: '10mb' }));
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') return res.sendStatus(200);
+  next();
+});
 app.use(express.urlencoded({ extended: true }));
 app.use(session({
   secret: process.env.SESSION_SECRET || 'crij-mayotte-secret-2027',
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 8 * 60 * 60 * 1000 }
+  cookie: { 
+    maxAge: 8 * 60 * 60 * 1000,
+    secure: false,
+    httpOnly: true,
+    sameSite: 'lax'
+  }
 }));
 // Trouver le dossier public (robuste)
 let PUBLIC_DIR = path.join(__dirname, 'public');
