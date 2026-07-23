@@ -31,7 +31,7 @@ function initDB() {
   const data = {
     utilisateurs: [
       { id: 'admin', login: 'admin', pass_hash: hash, role: 'admin',
-        prenom: 'Administrateur', nom: 'CRIJ', email: 'admin@crij-mayotte.fr', tel: '',
+        prenom: 'Administrateur', nom: 'CRIJ', email: 'ikram.crijmayotte@gmail.com', tel: '',
         sc_id: null, cip_id: null, created_at: new Date().toISOString() }
     ],
     volontaires: [],
